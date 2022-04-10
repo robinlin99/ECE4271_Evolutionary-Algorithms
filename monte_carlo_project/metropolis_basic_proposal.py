@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import random
+import statistics
 
 
 def q(m, n, spike):
@@ -92,7 +93,7 @@ def plot_expected_histogram(spike, N):
     plot_3d_histogram(p, f"Expected Histogram with N = {N} and Spikiness = {spike}")
 
 
-def main():
+def histogram_analysis():
     spike = float(input("Enter spikiness value: "))
     N = int(input("Enter number of iterations: "))
 
@@ -108,6 +109,40 @@ def main():
         f"Histogram for Simple Proposal Process with N = {N} and Spikiness = {spike}",
     )
     plot_expected_histogram(spike, N)
+
+
+def statistical_analysis():
+    combinations = [
+        (0.2, 10000),
+        (2, 10000),
+        (11, 10000),
+        (0.2, 50000),
+        (2, 50000),
+        (11, 50000),
+        (0.2, 100000),
+        (2, 100000),
+        (11, 100000),
+    ]
+
+    for combination in combinations:
+        spike = combination[0]
+        N = combination[1]
+        hist = []
+        for _ in range(10):
+            # Initialization
+            p = [(random.randint(0, 99), random.randint(0, 99))]
+            for iteration in range(N):
+                p.append(accept_reject(p[-1], propose_naive(p[-1]), spike))
+
+            hist.append(compute_average(p))
+
+        print(
+            f"Average E_p(f) for spike = {spike} and N = {N} is {statistics.mean(hist)} with standard deviation {statistics.stdev(hist)}"
+        )
+
+
+def main():
+    statistical_analysis()
 
 
 if __name__ == "__main__":
