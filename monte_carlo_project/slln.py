@@ -1,4 +1,5 @@
 import random
+import statistics
 
 
 def q(m, n, spike):
@@ -38,12 +39,12 @@ def automated_experiment():
     for combination in combinations:
         spike = combination[0]
         N = combination[1]
-        total_for_combination = 0
+        hist = []
         for _ in range(10):
-            total_for_combination += simulate(spike, N)
+            hist.append(simulate(spike, N))
 
         print(
-            f"Average E_p(f) for spike = {spike} and N = {N} is: {total_for_combination / 10}"
+            f"Average E_p(f) for spike = {spike} and N = {N} is {statistics.mean(hist)} with standard deviation {statistics.stdev(hist)}"
         )
 
 
